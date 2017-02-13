@@ -1,0 +1,23 @@
+{
+  "name": "parrot-bot",
+  "version": "1.0.0",
+  "description": "A bot that parrots an @ mention in Groupme, and associates that with a group",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Groupme",
+    "groups",
+    "bot"
+  ],
+  "author": "Jeff Arn",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "dotenv": "^4.0.0",
+    "express": "^4.14.1",
+    "request": "^2.79.0"
+  }
+}
