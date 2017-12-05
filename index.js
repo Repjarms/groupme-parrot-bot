@@ -1,10 +1,9 @@
-"use strict";
-
 require('dotenv').config();
 const express = require('express');
+
 const app = express();
 const bodyParser = require('body-parser');
-const request = require('request');
+const fetch = require('isomorphic-fetch');
 const parrot = require('./lib/parrot');
 
 const GROUPME_URL = 'https://api.groupme.com/v3/bots/post';
@@ -16,22 +15,32 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // root route
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.send('Hello world');
 });
 
 // callback route for Groupme Bot - this is
 // called every time a message is sent in the group
-app.post('/parrot', function(req, res) {
-  let bot_id = process.env.BOT_ID;
-  let payload = parrot.squawk(req.body.text, bot_id);
+app.post('/parrot', (req, res) => {
+  const botId = process.env.BOT_ID;
+  const payload = parrot.squawk(req.body.text, botId);
 
-  request.post(GROUPME_URL).form(payload);
-  res.send(payload);
+  fetch(GROUPME_URL, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: payload,
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.err(new Error(err));
+    });
 });
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, function() {
-  console.log('Parrot bot listening on port %s', port);
-});
+app.listen(port, () => {});
